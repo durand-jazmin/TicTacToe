@@ -17,7 +17,9 @@ h1 {
   margin-top: 0;
   color: wheat;
 }
-
+.hidden {
+  display: none;
+}
 .wrapper {
   display: flex;
   flex-direction: column;
