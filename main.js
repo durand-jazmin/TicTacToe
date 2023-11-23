@@ -1,4 +1,6 @@
 "use strict";
+
+const elementMessage = document.getElementById("message");
 // Variable para almacenar el jugador actual (X o O)
 let currentPlayer = "X";
 // Variable para determinar si el juego está activo o no
@@ -16,6 +18,7 @@ const winningConditions = [
   [0, 4, 8],
   [2, 4, 6],
 ];
+
 // Función para colocar la marca (X o O) en una celda del tablero
 function placeMarker(cell) {
   if (gameState[cell] === "" && gameActive) {
@@ -26,6 +29,7 @@ function placeMarker(cell) {
     displayPlayerTurn();
   }
 }
+
 // Función para verificar si hay un ganador
 function checkWin() {
   //recorre las condiciones ganadoras
@@ -38,16 +42,19 @@ function checkWin() {
       gameState[a] === gameState[b] &&
       gameState[a] === gameState[c]
     ) {
+      //visualizo mensaje ,quito el hidden
+      elementMessage.classList.remove("hidden");
+
       //actualiza el estado del juego si hay ganador
       gameActive = false;
-      document.getElementById(
-        "message"
-      ).innerText = `${gameState[a]} ha ganado!`;
+      //visualizo mensaje de victoria
+      elementMessage.innerText = `${gameState[a]} ha ganado!`;
       highlightWinnerCells([a, b, c]);
     }
   }
 }
 
+// Función para dar color al tablero al ganador
 function highlightWinnerCells(cellsToHighlight) {
   for (let cellIndex of cellsToHighlight) {
     document.getElementsByClassName("cell")[cellIndex].classList.add("winner");
@@ -56,6 +63,9 @@ function highlightWinnerCells(cellsToHighlight) {
 
 // Función para reiniciar el juego
 function resetGame() {
+  //oculto parrafo mensaje
+  elementMessage.classList.add("hidden");
+
   currentPlayer = "X";
   gameActive = true;
   //estado del juego: tablero vacío al inicio
@@ -71,13 +81,25 @@ function resetGame() {
     cells[i].innerText = "";
   }
 }
+// Función para quitar el highlight de las celdas ganadoras al reiniciar el juego.
 function removeHighlight() {
   const cells = document.getElementsByClassName("cell");
   for (let i = 0; i < cells.length; i++) {
     cells[i].classList.remove("winner");
   }
 }
+
+// Función para mostrar el turno del jugador actual.
 function displayPlayerTurn() {
   const playerTurnMessage = document.getElementById("playerTurn");
   playerTurnMessage.innerText = `Turno de: ${currentPlayer}`;
+}
+
+// Event listener para el botón de reinicio
+const cells = document.getElementsByClassName("cell");
+for (let cell of cells) {
+  const pos = cell.dataset.position;
+  cell.addEventListener("click", () => {
+    placeMarker(pos);
+  });
 }
